@@ -1,16 +1,17 @@
-# animal_welfare_project
+# PETHUB
 
-A new Flutter project.
+______________________________________________
 
-## Getting Started
+A Flutter App.
 
-This project is a starting point for a Flutter application.
+## Tech Stack
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter for Development. (Dart)
+- Microsoft Azure for Deployment, OAuth, and Server Functions.
+- Google AR Core for AR Functionality.(Not Confirmed Yet)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Project Highlights
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Sympathetic
+- Awareness
+- Startup / Business Model
