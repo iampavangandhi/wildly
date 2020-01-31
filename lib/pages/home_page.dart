@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import '../main.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,10 +23,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("YEAH"),
+        title: Text("Wildly"),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.payment), onPressed: () =>  Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => Paytm())))
+              .push(MaterialPageRoute(builder: (context) => Paytm()))),
+
+          IconButton(icon: Icon(Icons.error_outline), onPressed: () {
+            FirebaseAuth.instance.signOut();
+            Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => RootPage()));
+            showTopToast("Signing Out...");
+          },)
         ],
       ),
       bottomNavigationBar: FancyBottomNavigation(

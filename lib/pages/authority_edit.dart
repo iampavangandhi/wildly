@@ -5,8 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../main.dart';
 import '../main.dart';
 import 'login_page.dart';
 
@@ -153,6 +155,19 @@ class _AuthorityEditState extends State<AuthorityEdit> {
               ),
             ),
 
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: FlatButton(
+                child: Text("Sign Out"),
+                onPressed: (){
+                  FirebaseAuth.instance.signOut();
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => RootPage()));
+                  showTopToast("Signing Out...");
+                },
+              ),
+            )
+
           ],
         ),
       ),
@@ -197,6 +212,9 @@ class _AuthorityEditState extends State<AuthorityEdit> {
       });
 
       showTopToast("Data Inserted Successfully!");
+      setState(() {
+        _isLoading = false;
+      });
     } catch (e){
       showTopToast("Some error occurred $e");
     }
