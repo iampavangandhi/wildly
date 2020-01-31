@@ -57,7 +57,6 @@ class _ProfileState extends State<Profile> {
     DataSnapshot snapshot = await FirebaseDatabase.instance.reference().child('user_account_settings').child(user.uid).once();
     setState(() {
 
-      print('this is shit ${snapshot.value}');
       displayName = snapshot.value['displayName'];
       photoUrl = snapshot.value['photoUrl'];
       email = snapshot.value['email'];
@@ -66,7 +65,6 @@ class _ProfileState extends State<Profile> {
         photoUrl = "https://www.searchpng.com/wp-content/uploads/2019/02/Deafult-Profile-Pitcher.png";
       }
       if (displayName == null){
-
         List<String> f = email.split('@');
         displayName = f[0];
       }

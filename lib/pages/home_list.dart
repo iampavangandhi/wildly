@@ -13,7 +13,8 @@ class HomeList extends StatefulWidget {
 class _HomeListState extends State<HomeList> {
 
   bool _isLoading = true;
-  List storyList = List();
+  List animalList = List();
+  List ngoList = List();
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _HomeListState extends State<HomeList> {
     return items;
   }
 
+  PageController controller = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,34 +46,161 @@ class _HomeListState extends State<HomeList> {
                 color: Colors.white,
               ),
             )
-                : SingleChildScrollView(
-                child: Column(
+                : PageView(
+              controller: controller,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.vertical,
                   children: <Widget>[
-                    CarouselSlider(
-                      viewportFraction: 0.9,
-                      autoPlay: true,
-                      height: 300.0,
-                      items: _widgetList(storyList),
-                    ),
-                    SizedBox(
-                      height: 40.0,
-                    ),
-                    _epicTitle("Our Partners"),
-                    _horizontalList(storyList),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          CarouselSlider(
+                            viewportFraction: 0.9,
+                            autoPlay: true,
+                            height: 300.0,
+                            items: _widgetList(animalList),
+                          ),
+                          SizedBox(
+                            height: 11.0,
+                          ),
+                          _epicTitle("Our Partners"),
+                          _horizontalList(ngoList),
+                          IconButton(
+                            icon: Icon(Icons.keyboard_arrow_up),
+                            onPressed: () {
+                              controller.animateToPage(1, duration: Duration(milliseconds: 600), curve: Curves.easeOut);
+                            },
+                          )
 
+                        ],
+                      ),
+                    ),
+                    Container(margin: EdgeInsets.only(top: 50.0, bottom: 10.0),child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 2.0), itemCount: animalList.length ,itemBuilder: (context, index) => _gridItems(animalList[index])))
                   ],
-                ))));
+                )));
   }
 
   void _initData() async {
     DataSnapshot snapshot =
     await FirebaseDatabase.instance.reference().child('all_animals').once();
+    DataSnapshot snapshot1 =
+    await FirebaseDatabase.instance.reference().child('ngo_details').once();
+
+
     setState(() {
-       storyList = (snapshot.value as Map<dynamic, dynamic>).values.toList();
-       print('AnimalList $storyList');
+       animalList = (snapshot.value as Map<dynamic, dynamic>).values.toList();
+       ngoList = (snapshot1.value as Map<dynamic, dynamic>).values.toList();
       _isLoading = false;
     });
   }
+
+  _gridItems(story) {
+      return InkWell(
+      onTap: ()  {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
+      },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.0),
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                        height: 200.0,
+                        width: 200.0,
+                        child: Image.network(
+                          story['image'],
+                          fit: BoxFit.cover,
+                        )),
+                    Positioned(
+                      left: 0.0,
+                      bottom: 0.0,
+                      width: 200.0,
+                      height: 60.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black,
+                                  Colors.black.withOpacity(0.01),
+                                ])),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0.0,
+                      right: 8.0,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.9),
+                        child: Chip(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.circular(10.0)),
+                            backgroundColor: Colors.white,
+                            labelPadding: EdgeInsets.symmetric(
+                                horizontal: 4.0, vertical: 0.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 3.0),
+                            label: Text(
+                              story['type'],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                  fontSize: 11.0),
+                            )),
+                      ),
+                    ),
+                    Positioned(
+                      left: 10.0,
+                      bottom: 10.0,
+                      right: 10.0,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+
+                              Container(
+                                width: 160.0,
+                                child: Text(
+                                  '${story['name']}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 18.0),
+                                ),
+                              ),
+                              Container(
+                                width: 160.0,
+                                child: Text(
+                                  '${descriptionStringShort(story['cause'])}',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
 
   _horizontalList(List storyList) => Container(
     padding: EdgeInsets.all(12.0),
@@ -89,11 +218,11 @@ class _HomeListState extends State<HomeList> {
 
   Widget _listItem(story) {
     return InkWell(
-      onTap: ()  {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
-      },
+//      onTap: ()  {
+//        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
+//      },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,7 +271,7 @@ class _HomeListState extends State<HomeList> {
                           padding: EdgeInsets.symmetric(
                               vertical: 0.0, horizontal: 3.0),
                           label: Text(
-                            story['type'],
+                            story['manager'],
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black,
@@ -175,7 +304,7 @@ class _HomeListState extends State<HomeList> {
                             Container(
                               width: 160.0,
                               child: Text(
-                                '${descriptionStringShort(story['cause'])}',
+                                '${descriptionStringShort(story['description'])}',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 13.0),
                               ),

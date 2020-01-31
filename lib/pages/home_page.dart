@@ -25,10 +25,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Wildly"),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.payment), onPressed: () =>  Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => Paytm()))),
 
-          IconButton(icon: Icon(Icons.error_outline), onPressed: () {
+          IconButton(icon: Icon(Icons.add_to_home_screen), onPressed: () {
             FirebaseAuth.instance.signOut();
             Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => RootPage()));
