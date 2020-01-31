@@ -1,12 +1,15 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_welfare_project/utils/base_auth.dart';
 import 'package:animal_welfare_project/main.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../main.dart';
 
 //global variables
 PageController pageController;
@@ -680,185 +683,189 @@ class _SignUpOrgState extends State<SignUpOrg> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 64.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: signUpGradients,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
-      ),
-      child: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(left: 48.0, top: 32.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Register here',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      letterSpacing: 3,
-                      fontSize: 20.0,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.bold),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 48.0),
-                  child: Text(
-                    'To help the society',
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.only(top: 64.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: signUpGradients,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight),
+        ),
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(left: 48.0, top: 32.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Register here',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      letterSpacing: 3,
-                      fontSize: 32.0,
-                      fontFamily: 'Oxygen',
-                    ),
+                        letterSpacing: 3,
+                        fontSize: 20.0,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.bold),
                   ),
-                )
-              ],
+                  Container(
+                    margin: EdgeInsets.only(top: 48.0),
+                    child: Text(
+                      'To help the society',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        letterSpacing: 3,
+                        fontSize: 32.0,
+                        fontFamily: 'Oxygen',
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
 
-          //name
-          _textField(nameController, "Name"),
-          //description
-          _textField(descriptionController, "Description"),
-          //manager name
-          _textField(managerController, "Manager Name"),
-          //email text field
-          _textField(emailController, "Email"),
-          //phone number
-          _textField(phoneController, "Phone Number"),
-          //password Field
-          Container(
-            margin: EdgeInsets.only(left: 16.0, right: 32.0),
-            child: TextField(
-              controller: passwordController,
-              style: hintAndValueStyle,
-              obscureText: true,
-              decoration: new InputDecoration(
-                  fillColor: Color(0xffabecd6),
-                  filled: true,
-                  contentPadding:
-                  new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
-                  border: OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none),
-                  hintText: 'Password',
-                  hintStyle: hintAndValueStyle),
+            //name
+            _textField(nameController, "Name"),
+            //description
+            _textField(descriptionController, "Description"),
+            //manager name
+            _textField(managerController, "Manager Name"),
+            //email text field
+            _textField(emailController, "Email"),
+            //phone number
+            _textField(phoneController, "Phone Number"),
+            //password Field
+            Container(
+              margin: EdgeInsets.only(left: 16.0, right: 32.0),
+              child: TextField(
+                controller: passwordController,
+                style: hintAndValueStyle,
+                obscureText: true,
+                decoration: new InputDecoration(
+                    fillColor: Color(0xffabecd6),
+                    filled: true,
+                    contentPadding:
+                    new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
+                    border: OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none),
+                    hintText: 'Password',
+                    hintStyle: hintAndValueStyle),
+              ),
             ),
-          ),
-          //password Field
-          Container(
-            margin: EdgeInsets.only(left: 32.0, right: 16.0),
-            child: TextField(
-              controller: passwordController2,
-              style: hintAndValueStyle,
-              obscureText: true,
-              decoration: new InputDecoration(
-                  fillColor: Color(0xffabecd6),
-                  filled: true,
-                  contentPadding:
-                  new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
-                  border: OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none),
-                  hintText: 'Confirm Password',
-                  hintStyle: hintAndValueStyle),
+            //password Field
+            Container(
+              margin: EdgeInsets.only(left: 32.0, right: 16.0),
+              child: TextField(
+                controller: passwordController2,
+                style: hintAndValueStyle,
+                obscureText: true,
+                decoration: new InputDecoration(
+                    fillColor: Color(0xffabecd6),
+                    filled: true,
+                    contentPadding:
+                    new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
+                    border: OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none),
+                    hintText: 'Confirm Password',
+                    hintStyle: hintAndValueStyle),
+              ),
             ),
-          ),
-          //Image
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: FloatingActionButton(
-              onPressed: _addImageToDb,
-              child: Icon(Icons.image),
+            //Image
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: FloatingActionButton(
+                onPressed: _addImageToDb,
+                child: Icon(Icons.image),
+              ),
             ),
-          ),
 
 
-          //sign up button
-          Container(
-            margin: EdgeInsets.only(left: 32.0, top: 32.0),
-            child: Row(
-              children: <Widget>[
-                InkWell(
-                  onTap: () async {
-                    try {
-                      setState(() {
-                        _isLoading = true;
-                      });
+            //sign up button
+            Container(
+              margin: EdgeInsets.only(left: 32.0, top: 32.0),
+              child: Row(
+                children: <Widget>[
+                  InkWell(
+                    onTap: () async {
+                      try {
+                        setState(() {
+                          _isLoading = true;
+                        });
 
-                      if (_everythingIsOk()) {
-                        String uid = await baseAuth.signUp(email, password, "authority");
+                        if (_everythingIsOk()) {
+                          String uid = await baseAuth.signUp(email, password, "authority");
 
-                        if (uid.isNotEmpty) {
-                          baseAuth.sendEmailVerification();
-                          _addToDb();
-                          showTopToast('Verification email has been sent');
+                          if (uid.isNotEmpty) {
+                            baseAuth.sendEmailVerification();
+                            _addToDb();
+                            showTopToast('Verification email has been sent');
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                        } else {
                           setState(() {
+                            print('setting isLoading false');
                             _isLoading = false;
                           });
                         }
-                      } else {
+                      } catch (e) {
+                        showTopToast('Oops.. an error occurred');
                         setState(() {
-                          print('setting isLoading false');
+                          print('setting isLoading false in catch');
                           _isLoading = false;
                         });
                       }
-                    } catch (e) {
-                      showTopToast('Oops.. an error occurred');
-                      setState(() {
-                        print('setting isLoading false in catch');
-                        _isLoading = false;
-                      });
-                    }
-                  },
-                  child: Container(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 15,
-                              spreadRadius: 0,
-                              offset: Offset(0.0, 32.0)),
-                        ],
-                        borderRadius: new BorderRadius.circular(36.0),
-                        gradient:
-                        LinearGradient(begin: FractionalOffset.centerLeft,
+                    },
+                    child: Container(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 15,
+                                spreadRadius: 0,
+                                offset: Offset(0.0, 32.0)),
+                          ],
+                          borderRadius: new BorderRadius.circular(36.0),
+                          gradient:
+                          LinearGradient(begin: FractionalOffset.centerLeft,
 // Add one stop for each color. Stops should increase from 0 to 1
-                            stops: [
-                              0.2,
-                              1
-                            ], colors: [
-                              Color(0xffFFC3A0),
-                              Color(0xffFFAFBD),
-                            ])),
-                    child: _isLoading
-                        ? SpinKitFadingCircle(color: Colors.white)
-                        : Text(
-                      'SIGN UP',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Raleway'),
+                              stops: [
+                                0.2,
+                                1
+                              ], colors: [
+                                Color(0xffFFC3A0),
+                                Color(0xffFFAFBD),
+                              ])),
+                      child: _isLoading
+                          ? SpinKitFadingCircle(color: Colors.white)
+                          : Text(
+                        'SIGN UP',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Raleway'),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-        ],
+          ],
+        ),
       ),
     );
   }
 
   void _addToDb() async {
+
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
     String email = emailController.value.text;
     String name = nameController.value.text;
     String dis = descriptionController.value.text;
@@ -868,7 +875,7 @@ class _SignUpOrgState extends State<SignUpOrg> {
       await FirebaseDatabase.instance
           .reference()
           .child('ngo_details')
-          .child(name)
+          .child(user.uid)
       .set({
         'email': email,
         'name': name,
@@ -899,6 +906,7 @@ class _SignUpOrgState extends State<SignUpOrg> {
       //content is image url
       if (imageURL != null) {
         imgURL = imageURL;
+        showTopToast("Image uploaded successfully!");
       }
     }
   }

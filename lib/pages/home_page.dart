@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     DataSnapshot snapshot1 = await FirebaseDatabase.instance
         .reference()
-        .child('users')
+        .child('user_account_settings')
         .child(user.uid)
         .child('type')
         .once();

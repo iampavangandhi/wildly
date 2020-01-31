@@ -76,6 +76,16 @@ class Auth implements BaseAuth {
   }
 
   addToDatabase(FirebaseUser user, String type) {
+
+    if(type == "authority"){
+      FirebaseDatabase.instance
+          .reference()
+          .child('users')
+          .child(user.uid)
+          .child('type')
+          .set("authority");
+    }
+
     _ref.child(user.uid).set({
       'photoUrl': user.photoUrl,
       'phoneNumber': user.phoneNumber,
