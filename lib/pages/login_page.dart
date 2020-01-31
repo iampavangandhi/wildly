@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_welfare_project/utils/base_auth.dart';
 import 'package:animal_welfare_project/main.dart';
@@ -637,10 +642,16 @@ class SignUpOrg extends StatefulWidget {
 class _SignUpOrgState extends State<SignUpOrg> {
   String email, password;
 
+  String imgURL = "";
+
   bool _isLoading = false;
   bool isEverythingOk = false;
 
   TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController managerController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordController2 = TextEditingController();
 
@@ -649,7 +660,8 @@ class _SignUpOrgState extends State<SignUpOrg> {
     password = passwordController2.value.text;
 
     if (passwordController.value.text == passwordController2.value.text) {
-      if (email.contains('@')) {
+      if (email.contains('@') && nameController.value.text.isNotEmpty && descriptionController.value.text.isNotEmpty
+      && managerController.value.text.isNotEmpty && phoneController.value.text.isNotEmpty) {
         if (password.length > 6) {
           showTopToast("Signing you in...");
           return true;
@@ -657,7 +669,7 @@ class _SignUpOrgState extends State<SignUpOrg> {
           showTopToast("Password is too short");
         }
       } else {
-        showTopToast("Email address is incorrect");
+        showTopToast("Please enter all the details");
       }
     } else {
       showTopToast("Passwords do not match");
@@ -709,44 +721,16 @@ class _SignUpOrgState extends State<SignUpOrg> {
             ),
           ),
 
+          //name
+          _textField(nameController, "Name"),
+          //description
+          _textField(descriptionController, "Description"),
+          //manager name
+          _textField(managerController, "Manager Name"),
           //email text field
-          Container(
-            margin: EdgeInsets.only(left: 16.0, right: 32.0, top: 32.0),
-            decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 15,
-                      spreadRadius: 0,
-                      offset: Offset(0.0, 16.0)),
-                ],
-                borderRadius: new BorderRadius.circular(12.0),
-                gradient: LinearGradient(
-                    begin: FractionalOffset(0.0, 0.4),
-                    end: FractionalOffset(0.9, 0.7),
-                    // Add one stop for each color. Stops should increase from 0 to 1
-                    stops: [
-                      0.2,
-                      0.9
-                    ],
-                    colors: [
-                      Color(0xffFFC3A0),
-                      Color(0xffFFAFBD),
-                    ])),
-            child: TextField(
-              style: hintAndValueStyle,
-              controller: emailController,
-              decoration: new InputDecoration(
-                  contentPadding:
-                  new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
-                  border: OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none),
-                  hintText: 'Email',
-                  hintStyle: hintAndValueStyle),
-            ),
-          ),
-
+          _textField(emailController, "Email"),
+          //phone number
+          _textField(phoneController, "Phone Number"),
           //password Field
           Container(
             margin: EdgeInsets.only(left: 16.0, right: 32.0),
@@ -766,7 +750,6 @@ class _SignUpOrgState extends State<SignUpOrg> {
                   hintStyle: hintAndValueStyle),
             ),
           ),
-
           //password Field
           Container(
             margin: EdgeInsets.only(left: 32.0, right: 16.0),
@@ -786,6 +769,15 @@ class _SignUpOrgState extends State<SignUpOrg> {
                   hintStyle: hintAndValueStyle),
             ),
           ),
+          //Image
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: FloatingActionButton(
+              onPressed: _addImageToDb,
+              child: Icon(Icons.image),
+            ),
+          ),
+
 
           //sign up button
           Container(
@@ -804,11 +796,11 @@ class _SignUpOrgState extends State<SignUpOrg> {
 
                         if (uid.isNotEmpty) {
                           baseAuth.sendEmailVerification();
+                          _addToDb();
                           showTopToast('Verification email has been sent');
                           setState(() {
                             _isLoading = false;
                           });
-                          Navigator.of(context).pop();
                         }
                       } else {
                         setState(() {
@@ -862,6 +854,90 @@ class _SignUpOrgState extends State<SignUpOrg> {
           ),
 
         ],
+      ),
+    );
+  }
+
+  void _addToDb() async {
+    String email = emailController.value.text;
+    String name = nameController.value.text;
+    String dis = descriptionController.value.text;
+    String manager = managerController.value.text;
+    String phone = phoneController.value.text;
+
+      await FirebaseDatabase.instance
+          .reference()
+          .child('ngo_details')
+          .child(name)
+      .set({
+        'email': email,
+        'name': name,
+        'description': dis,
+        'manager': manager,
+        'phone' : phone,
+        'image' : imgURL,
+      });
+
+    Navigator.of(context).pop();
+  }
+
+  void _addImageToDb() async {
+    File galleryImage = await FilePicker.getFile(type: FileType.ANY);
+
+    if (galleryImage != null) {
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+      StorageReference ref = FirebaseStorage.instance
+          .ref()
+          .child('animal_photos')
+          .child('$timestamp');
+
+      StorageUploadTask uploadTask = ref.putFile(galleryImage);
+      String imageURL =
+      await (await uploadTask.onComplete).ref.getDownloadURL();
+
+      //content is image url
+      if (imageURL != null) {
+        imgURL = imageURL;
+      }
+    }
+  }
+
+  _textField(TextEditingController controller, String s) {
+    return Container(
+      margin: EdgeInsets.only(left: 16.0, right: 32.0, top: 32.0),
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black12,
+                blurRadius: 15,
+                spreadRadius: 0,
+                offset: Offset(0.0, 16.0)),
+          ],
+          borderRadius: new BorderRadius.circular(12.0),
+          gradient: LinearGradient(
+              begin: FractionalOffset(0.0, 0.4),
+              end: FractionalOffset(0.9, 0.7),
+              // Add one stop for each color. Stops should increase from 0 to 1
+              stops: [
+                0.2,
+                0.9
+              ],
+              colors: [
+                Color(0xffFFC3A0),
+                Color(0xffFFAFBD),
+              ])),
+      child: TextField(
+        style: hintAndValueStyle,
+        controller: controller,
+        decoration: new InputDecoration(
+            contentPadding:
+            new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
+            border: OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(12.0),
+                borderSide: BorderSide.none),
+            hintText: s,
+            hintStyle: hintAndValueStyle),
       ),
     );
   }

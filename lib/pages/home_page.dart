@@ -1,3 +1,4 @@
+import 'package:animal_welfare_project/pages/authority_edit.dart';
 import 'package:animal_welfare_project/pages/profile.dart';
 import 'package:animal_welfare_project/pages/discover.dart';
 import 'package:animal_welfare_project/pages/home_list.dart';
@@ -54,6 +55,18 @@ class _HomePageState extends State<HomePage> {
 
   _isFirstTimeLogin() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    DataSnapshot snapshot1 = await FirebaseDatabase.instance
+        .reference()
+        .child('users')
+        .child(user.uid)
+        .child('type')
+        .once();
+
+    //if authority, go to the authorities page
+    if (snapshot1.value == "authority") {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AuthorityEdit()));
+    }
+
     DataSnapshot snapshot = await FirebaseDatabase.instance
         .reference()
         .child('users')
