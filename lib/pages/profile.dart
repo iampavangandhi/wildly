@@ -9,7 +9,8 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
 
-  String displayName, email, photoUrl;
+  String displayName, email;
+  String photoUrl = "";
 
 
   @override

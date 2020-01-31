@@ -1,3 +1,4 @@
+import 'package:animal_welfare_project/pages/animal_single_item_page.dart';
 import 'package:animal_welfare_project/utils/size_util.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -72,9 +73,25 @@ class _HomeListState extends State<HomeList> {
     });
   }
 
+  _horizontalList(List storyList) => Container(
+    padding: EdgeInsets.all(12.0),
+    height: 280.0,
+    child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: storyList.length,
+        itemBuilder: (context, index) => _listItem(storyList[index])),
+  );
+
+  _epicTitle(String title) => Padding(
+    padding: const EdgeInsets.only(left: 22.0),
+    child: Text(title),
+  );
+
   Widget _listItem(story) {
     return InkWell(
-//      onTap: () => openStory(story),
+      onTap: ()  {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
@@ -110,82 +127,65 @@ class _HomeListState extends State<HomeList> {
                               ])),
                     ),
                   ),
-
                   Positioned(
-                top: 0.0,
-                right: 8.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.9),
-                  child: Chip(
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                              color: Colors.black, width: 1.5)),
-                      backgroundColor: Colors.white,
-                      labelPadding: EdgeInsets.symmetric(
-                          horizontal: 4.0, vertical: 0.0),
-                      padding: EdgeInsets.symmetric(
-                          vertical: 0.0, horizontal: 3.0),
-                      label: Text(
-                        story['type'],
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                            fontSize: 11.0),
-                      )),
-                ),
-              ),
-
+                    top: 0.0,
+                    right: 8.0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.9),
+                      child: Chip(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(10.0)),
+                          backgroundColor: Colors.white,
+                          labelPadding: EdgeInsets.symmetric(
+                              horizontal: 4.0, vertical: 0.0),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 3.0),
+                          label: Text(
+                            story['type'],
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                                fontSize: 11.0),
+                          )),
+                    ),
+                  ),
                   Positioned(
                     left: 10.0,
                     bottom: 10.0,
                     right: 10.0,
                     child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Chip(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(10.0)),
-                              backgroundColor: Colors.white,
-                              labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 4.0, vertical: 0.0),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 0.0, horizontal: 3.0),
-                              label: Text('${story['name']}',
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+
+                            Container(
+                              width: 160.0,
+                              child: Text(
+                                '${story['name']}',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                    fontSize: 11.0),
-                              )),
-                          Container(
-                            width: 200,
-                            child: Text(
-                              '${story['name']}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 18.0),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 18.0),
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: SizeUtil.width - 96.0,
-                            child: Text(
-                              '${story['cause']}',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 13.0),
+                            Container(
+                              width: 160.0,
+                              child: Text(
+                                '${descriptionStringShort(story['cause'])}',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 13.0),
+                              ),
                             ),
-                          ),
-                        ]
-                    )
-
-                  ],
-                ),
-
-              )],
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
           ],
@@ -194,22 +194,11 @@ class _HomeListState extends State<HomeList> {
     );
   }
 
-  _horizontalList(List storyList) => Container(
-    padding: EdgeInsets.all(12.0),
-    height: 280.0,
-    child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: storyList.length,
-        itemBuilder: (context, index) => _listItem(storyList[index])),
-  );
-
-  _epicTitle(String title) => Padding(
-    padding: const EdgeInsets.only(left: 22.0),
-    child: Text(title),
-  );
-
+  //the carousel
   Widget wid(story) => InkWell(
-//    onTap: () => openStory(story),
+    onTap: () {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
+    },
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
@@ -245,7 +234,6 @@ class _HomeListState extends State<HomeList> {
                             ])),
                   ),
                 ),
-
                 Positioned(
                   top: 0.0,
                   right: 8.0,
@@ -253,8 +241,8 @@ class _HomeListState extends State<HomeList> {
                     padding: const EdgeInsets.only(left: 8.9),
                     child: Chip(
                         shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                color: Colors.black, width: 1.5)),
+                            borderRadius:
+                            BorderRadius.circular(10.0)),
                         backgroundColor: Colors.white,
                         labelPadding: EdgeInsets.symmetric(
                             horizontal: 4.0, vertical: 0.0),
@@ -269,7 +257,6 @@ class _HomeListState extends State<HomeList> {
                         )),
                   ),
                 ),
-
                 Positioned(
                   left: 10.0,
                   bottom: 10.0,
@@ -279,50 +266,46 @@ class _HomeListState extends State<HomeList> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Chip(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(10.0)),
-                                backgroundColor: Colors.white,
-                                labelPadding: EdgeInsets.symmetric(
-                                    horizontal: 4.0, vertical: 0.0),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 0.0, horizontal: 3.0),
-                                label: Text('${story['name']}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black,
-                                      fontSize: 11.0),
-                                )),
-                            Container(
-                              width: 200,
-                              child: Text(
-                                '${story['name']}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 18.0),
-                              ),
-                            ),
-                            Container(
-                              width: SizeUtil.width - 96.0,
-                              child: Text(
-                                '${story['cause']}',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 13.0),
-                              ),
-                            ),
-                          ]
-                      )
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
 
+                          Container(
+                            width: 200,
+                            child: Text(
+                              '${story['name']}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 18.0),
+                            ),
+                          ),
+                          Container(
+                            width: SizeUtil.width - 96.0,
+                            child: Text(
+                              '${descriptionStringLong(story['cause'])}',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 13.0),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
+                  ),
+                )
+              ],
             ),
           ),
         ],
       ),
     ),
-  ])));
+  );
+
+  descriptionStringShort(String description) => description.length > 22
+      ? description.substring(0, 22) + '...'
+      : description;
+
+  descriptionStringLong(String description) => description.length > 46
+      ? description.substring(0, 46) + '...'
+      : description;
 
 }
