@@ -86,7 +86,6 @@ class _HomeListState extends State<HomeList> {
     DataSnapshot snapshot1 =
     await FirebaseDatabase.instance.reference().child('ngo_details').once();
 
-
     setState(() {
        animalList = (snapshot.value as Map<dynamic, dynamic>).values.toList();
        ngoList = (snapshot1.value as Map<dynamic, dynamic>).values.toList();
@@ -97,7 +96,7 @@ class _HomeListState extends State<HomeList> {
   _gridItems(story) {
       return InkWell(
       onTap: ()  {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage(story['image'], story['name'], story['cause'], true)));
       },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -216,11 +215,12 @@ class _HomeListState extends State<HomeList> {
     child: Text(title),
   );
 
+  //NGO list
   Widget _listItem(story) {
     return InkWell(
-//      onTap: ()  {
-//        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
-//      },
+      onTap: ()  {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage(story['image'], story['name'], story['description'], false)));
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: Column(
@@ -326,7 +326,7 @@ class _HomeListState extends State<HomeList> {
   //the carousel
   Widget wid(story) => InkWell(
     onTap: () {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage(story['image'], story['name'], story['cause'], true)));
     },
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),

@@ -162,7 +162,7 @@ class _AuthorityEditState extends State<AuthorityEdit> {
                 onPressed: (){
                   FirebaseAuth.instance.signOut();
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => RootPage()));
+                      .pushReplacement(MaterialPageRoute(builder: (context) => RootPage()));
                   showTopToast("Signing Out...");
                 },
               ),

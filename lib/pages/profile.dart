@@ -60,7 +60,7 @@ class _ProfileState extends State<Profile> {
   _listItem(story) {
     return InkWell(
       onTap: ()  {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnimalSingleItemPage(story['image'], story['name'], story['cause'], false)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -95,29 +95,6 @@ class _ProfileState extends State<Profile> {
                                 Colors.black,
                                 Colors.black.withOpacity(0.01),
                               ])),
-                    ),
-                  ),
-                  Positioned(
-                    top: 0.0,
-                    right: 8.0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.9),
-                      child: Chip(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(10.0)),
-                          backgroundColor: Colors.white,
-                          labelPadding: EdgeInsets.symmetric(
-                              horizontal: 4.0, vertical: 0.0),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 0.0, horizontal: 3.0),
-                          label: Text(
-                            story['type'],
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: 11.0),
-                          )),
                     ),
                   ),
                   Positioned(

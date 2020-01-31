@@ -97,12 +97,7 @@ class _GLoginState extends State<GLogin> {
         physics: BouncingScrollPhysics(),
         children: <Widget>[
           Center(
-            child: Image.asset(
-              'assets/images/dogDoc.jpeg',
-              height: 100.0,
-              width: 100.0,
-              fit: BoxFit.cover,
-            ),
+            child: Text('Wildly', style: new TextStyle(fontWeight: FontWeight.bold, fontFamily: 'DancingScript', color: Colors.white, fontSize: 48.0),)
           ),
           headlinesWidget(),
 
@@ -737,7 +732,7 @@ class _SignUpOrgState extends State<SignUpOrg> {
             _textField(phoneController, "Phone Number"),
             //password Field
             Container(
-              margin: EdgeInsets.only(left: 16.0, right: 32.0),
+              margin: EdgeInsets.only(left: 16.0, right: 32.0, top: 32.0),
               child: TextField(
                 controller: passwordController,
                 style: hintAndValueStyle,
@@ -756,7 +751,7 @@ class _SignUpOrgState extends State<SignUpOrg> {
             ),
             //password Field
             Container(
-              margin: EdgeInsets.only(left: 32.0, right: 16.0),
+              margin: EdgeInsets.only(left: 16.0, right: 32.0, top: 32.0),
               child: TextField(
                 controller: passwordController2,
                 style: hintAndValueStyle,
@@ -965,7 +960,7 @@ Widget headlinesWidget() {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'WELCOME BACK!',
+          'WELCOME!',
           textAlign: TextAlign.left,
           style: TextStyle(
               letterSpacing: 3,
