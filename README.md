@@ -7,7 +7,7 @@ A Flutter App.
 ## Tech Stack
 
 - Flutter for Development. (Dart)
-- Microsoft Azure for Deployment, OAuth, and Server Functions.
+- Firebase for Database, Cloud Storage and Authentication
 - Google AR Core for AR Functionality.(Not Confirmed Yet)
 
 ## Project Highlights

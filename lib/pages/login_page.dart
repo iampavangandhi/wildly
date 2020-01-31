@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:animal_welfare_project/base_auth.dart';
+import 'package:animal_welfare_project/utils/base_auth.dart';
 import 'package:animal_welfare_project/main.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -394,7 +394,7 @@ class _SignInState extends State<SignIn> {
                 Container(
                   margin: EdgeInsets.only(top: 48.0),
                   child: Text(
-                    'Sign Up \nfor Animal',
+                    'Sign Up \nfor Wildly',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       letterSpacing: 3,
@@ -498,7 +498,7 @@ class _SignInState extends State<SignIn> {
                       });
 
                       if (_everythingIsOk()) {
-                        String uid = await baseAuth.signUp(email, password);
+                        String uid = await baseAuth.signUp(email, password, "user");
 
                         if (uid.isNotEmpty) {
                           baseAuth.sendEmailVerification();
@@ -561,6 +561,7 @@ class _SignInState extends State<SignIn> {
             ),
           ),
 
+          //back to login
           Container(
             margin: EdgeInsets.only(left: 32.0, top: 32.0),
             child: Row(
@@ -604,11 +605,268 @@ class _SignInState extends State<SignIn> {
               ],
             ),
           ),
+
+          //ngo sign in
+          Container(
+            margin: EdgeInsets.only(left: 48.0, top: 32.0),
+            child:  FlatButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(  builder: (context) => SignUpOrg()));
+              },
+              child: Text(
+                'Sign Up As NGO/Animal Organisation',
+                style: TextStyle(
+                    color: Color(0xff353535),
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Raleway'),
+              ),
+            )
+          )
         ],
       ),
     );
   }
 }
+
+class SignUpOrg extends StatefulWidget {
+  @override
+  _SignUpOrgState createState() => _SignUpOrgState();
+}
+
+class _SignUpOrgState extends State<SignUpOrg> {
+  String email, password;
+
+  bool _isLoading = false;
+  bool isEverythingOk = false;
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordController2 = TextEditingController();
+
+  bool _everythingIsOk() {
+    email = emailController.value.text;
+    password = passwordController2.value.text;
+
+    if (passwordController.value.text == passwordController2.value.text) {
+      if (email.contains('@')) {
+        if (password.length > 6) {
+          showTopToast("Signing you in...");
+          return true;
+        } else {
+          showTopToast("Password is too short");
+        }
+      } else {
+        showTopToast("Email address is incorrect");
+      }
+    } else {
+      showTopToast("Passwords do not match");
+    }
+
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 64.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            colors: signUpGradients,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight),
+      ),
+      child: ListView(
+        physics: BouncingScrollPhysics(),
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(left: 48.0, top: 32.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Register here',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      letterSpacing: 3,
+                      fontSize: 20.0,
+                      fontFamily: 'Raleway',
+                      fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 48.0),
+                  child: Text(
+                    'To help the society',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      letterSpacing: 3,
+                      fontSize: 32.0,
+                      fontFamily: 'Oxygen',
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+
+          //email text field
+          Container(
+            margin: EdgeInsets.only(left: 16.0, right: 32.0, top: 32.0),
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 15,
+                      spreadRadius: 0,
+                      offset: Offset(0.0, 16.0)),
+                ],
+                borderRadius: new BorderRadius.circular(12.0),
+                gradient: LinearGradient(
+                    begin: FractionalOffset(0.0, 0.4),
+                    end: FractionalOffset(0.9, 0.7),
+                    // Add one stop for each color. Stops should increase from 0 to 1
+                    stops: [
+                      0.2,
+                      0.9
+                    ],
+                    colors: [
+                      Color(0xffFFC3A0),
+                      Color(0xffFFAFBD),
+                    ])),
+            child: TextField(
+              style: hintAndValueStyle,
+              controller: emailController,
+              decoration: new InputDecoration(
+                  contentPadding:
+                  new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none),
+                  hintText: 'Email',
+                  hintStyle: hintAndValueStyle),
+            ),
+          ),
+
+          //password Field
+          Container(
+            margin: EdgeInsets.only(left: 16.0, right: 32.0),
+            child: TextField(
+              controller: passwordController,
+              style: hintAndValueStyle,
+              obscureText: true,
+              decoration: new InputDecoration(
+                  fillColor: Color(0xffabecd6),
+                  filled: true,
+                  contentPadding:
+                  new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none),
+                  hintText: 'Password',
+                  hintStyle: hintAndValueStyle),
+            ),
+          ),
+
+          //password Field
+          Container(
+            margin: EdgeInsets.only(left: 32.0, right: 16.0),
+            child: TextField(
+              controller: passwordController2,
+              style: hintAndValueStyle,
+              obscureText: true,
+              decoration: new InputDecoration(
+                  fillColor: Color(0xffabecd6),
+                  filled: true,
+                  contentPadding:
+                  new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(12.0),
+                      borderSide: BorderSide.none),
+                  hintText: 'Confirm Password',
+                  hintStyle: hintAndValueStyle),
+            ),
+          ),
+
+          //sign up button
+          Container(
+            margin: EdgeInsets.only(left: 32.0, top: 32.0),
+            child: Row(
+              children: <Widget>[
+                InkWell(
+                  onTap: () async {
+                    try {
+                      setState(() {
+                        _isLoading = true;
+                      });
+
+                      if (_everythingIsOk()) {
+                        String uid = await baseAuth.signUp(email, password, "authority");
+
+                        if (uid.isNotEmpty) {
+                          baseAuth.sendEmailVerification();
+                          showTopToast('Verification email has been sent');
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          Navigator.of(context).pop();
+                        }
+                      } else {
+                        setState(() {
+                          print('setting isLoading false');
+                          _isLoading = false;
+                        });
+                      }
+                    } catch (e) {
+                      showTopToast('Oops.. an error occurred');
+                      setState(() {
+                        print('setting isLoading false in catch');
+                        _isLoading = false;
+                      });
+                    }
+                  },
+                  child: Container(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 15,
+                              spreadRadius: 0,
+                              offset: Offset(0.0, 32.0)),
+                        ],
+                        borderRadius: new BorderRadius.circular(36.0),
+                        gradient:
+                        LinearGradient(begin: FractionalOffset.centerLeft,
+// Add one stop for each color. Stops should increase from 0 to 1
+                            stops: [
+                              0.2,
+                              1
+                            ], colors: [
+                              Color(0xffFFC3A0),
+                              Color(0xffFFAFBD),
+                            ])),
+                    child: _isLoading
+                        ? SpinKitFadingCircle(color: Colors.white)
+                        : Text(
+                      'SIGN UP',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Raleway'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+
 
 TextStyle hintAndValueStyle = TextStyle(
     color: Color(0xff353535),

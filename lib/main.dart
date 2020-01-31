@@ -3,7 +3,7 @@ import 'package:animal_welfare_project/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:animal_welfare_project/services.dart';
+import 'package:animal_welfare_project/utils/services.dart';
 import 'package:oktoast/oktoast.dart';
 
 void main() {

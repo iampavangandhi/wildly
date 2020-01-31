@@ -6,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 abstract class BaseAuth {
   Future<String> signIn(String email, String password);
 
-  Future<String> signUp(String email, String password);
+  Future<String> signUp(String email, String password, String type);
 
   Future<String> getCurrentUser();
 
@@ -32,10 +32,10 @@ class Auth implements BaseAuth {
     return user.uid;
   }
 
-  Future<String> signUp(String email, String password) async {
+  Future<String> signUp(String email, String password, String type) async {
     FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
-    addToDatabase(user);
+    addToDatabase(user, type);
     return user.uid;
   }
 
@@ -60,7 +60,7 @@ class Auth implements BaseAuth {
         accessToken: authentication.accessToken);
     FirebaseUser user = await _firebaseAuth.signInWithCredential(c);
 
-    addToDatabase(user);
+    addToDatabase(user, "user");
 
     return user.uid;
   }
@@ -75,12 +75,13 @@ class Auth implements BaseAuth {
     _googleSignIn.signOut();
   }
 
-  addToDatabase(FirebaseUser user) {
+  addToDatabase(FirebaseUser user, String type) {
     _ref.child(user.uid).set({
       'photoUrl': user.photoUrl,
       'phoneNumber': user.phoneNumber,
       'displayName': user.displayName,
       'email': user.email,
+      'type' : type
     });
   }
 }

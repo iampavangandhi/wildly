@@ -1,5 +1,8 @@
-import 'package:animal_welfare_project/main.dart';
+import 'package:animal_welfare_project/pages/profile.dart';
+import 'package:animal_welfare_project/pages/discover.dart';
+import 'package:animal_welfare_project/pages/home_list.dart';
 import 'package:animal_welfare_project/utils/paytm.dart';
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -10,6 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  int currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,17 +26,21 @@ class _HomePageState extends State<HomePage> {
               .push(MaterialPageRoute(builder: (context) => Paytm())))
         ],
       ),
+      bottomNavigationBar: FancyBottomNavigation(
+        tabs: [
+          TabData(iconData: Icons.home, title: "Home"),
+          TabData(iconData: Icons.search, title: "Discover"),
+          TabData(iconData: Icons.person, title: "Profile"),
+        ],
+        onTabChangedListener: (p) {
+          setState(() {
+            currentPage = p;
+          });
+        },
+      ),
       body: Container(
         child: Center(
-          child: FlatButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.of(context)
-                  .pushReplacement(MaterialPageRoute(builder: (context) => RootPage()));
-              showTopToast("Signing out...");
-            },
-            child: Text("Sign Out"),
-          ),
+          child: _getPage(currentPage)
         ),
       ),
     );
@@ -60,5 +70,20 @@ class _HomePageState extends State<HomePage> {
           .child('points')
           .set(200);
     }
+  }
+
+  _getPage(int currentPage) {
+
+    switch(currentPage){
+      case 0:
+        return HomeList();
+
+      case 1:
+        return Discover();
+
+      case 2:
+        return Profile();
+    }
+
   }
 }
