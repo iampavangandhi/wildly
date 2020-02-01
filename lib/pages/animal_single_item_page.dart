@@ -1,23 +1,13 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:animal_welfare_project/pages/profile.dart';
-
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:paytm_payments/paytm_payments.dart';
-
 import '../main.dart';
-import '../utils/paytm.dart';
-import 'login_page.dart';
 
 class AnimalSingleItemPage extends StatefulWidget {
 
-  String imgUrl, title, description;
-  bool isAnimal;
+  final String imgUrl, title, description;
+  final bool isAnimal;
 
   AnimalSingleItemPage(this.imgUrl, this.title, this.description, this.isAnimal);
 
