@@ -22,6 +22,7 @@ ______________________________________________
 - Monthly subscription/ one time payment using Paytm SDK
 
 ### Download the android apk through [Here](https://github.com/toseefkhan403/wildly/app-release.apk)
+[Here again](https://github.com/toseefkhan403/wildly/blob/master/app-release.apk)
 
 ______________________________________________
 
